@@ -1,12 +1,9 @@
-package utils;
+package zts.com.imageloader.utils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * 
- * @author Administrator �̳߳ع���
- */
+
 
 public class ThreadPoolUtils {
 	private ExecutorService fixedThreadPool;

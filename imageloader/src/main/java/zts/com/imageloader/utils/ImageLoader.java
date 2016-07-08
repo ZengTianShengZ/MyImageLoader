@@ -1,25 +1,17 @@
-package utils;
+package zts.com.imageloader.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.ref.SoftReference;
-import java.util.HashMap;
-
-
-import android.R.integer;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
+
 
 public class ImageLoader {
 
@@ -32,9 +24,9 @@ public class ImageLoader {
 
 	public ImageLoader() {
 
-		// È¡Ó¦ÓÃÄÚ´æµÄ 8/1 ×÷Îª Í¼Æ¬»º´æÓÃ
+		// å–åº”ç”¨å†…å­˜çš„ 8/1 ä½œä¸º å›¾ç‰‡ç¼“å­˜ç”¨
 		int cacheSize = maxMemory / 8;
-		// µÃµ½ LruCache
+		// å¾—åˆ° LruCache
 		mLruCache = new LruCache<String, Bitmap>(cacheSize) {
 			@Override
 			protected int sizeOf(String key, Bitmap bitmap) {
@@ -44,23 +36,15 @@ public class ImageLoader {
 
 	}
 
-	// final µÄÊ¹ÓÃ £ºhttp://blog.csdn.net/salahg/article/details/7529091
-
 	/**
-	 * ÏÔÊ¾ Í¼Æ¬
-	 *
-	 * @param context
-	 *            £º ÉÏÏÂÎÄ
-	 * @param imageView
-	 *            £º ImageView ¿Ø¼ş
-	 * @param sourcePath
-	 *            £º Í¼Æ¬ µØÖ·
-	 * @param r_Id
-	 *            £º Ä¬ÈÏ Í¼Æ¬ id £¬R.drowable.id;
-	 * @param callback
-	 *            £ºÍ¼Æ¬ÏÔÊ¾ »Øµ÷
-	 */
-	public void displayBmp(final Context context, final ImageView imageView, final String sourcePath, final int r_Id,
+	 * æ˜¾ç¤º å›¾ç‰‡
+	 * @param context ä¸Šä¸‹æ–‡
+	 * @param imageView view
+	 * @param sourcePath å›¾ç‰‡å‚¨å­˜åœ°å€
+	 * @param r_Id é»˜è®¤æ˜¾ç¤º çš„å›¾ç‰‡
+     * @param callback  å›¾ç‰‡å›æ‰æ˜¾ç¤º
+     */
+	public void displayBitmap(final Context context, final ImageView imageView, final String sourcePath, final int r_Id,
 						   final ImageCallback callback) {
 
 		final String path;
@@ -71,20 +55,20 @@ public class ImageLoader {
 		} else {
 			return;
 		}
-		// ÏÈ ÊÔ×Å ´Ó »º´æ µÃµ½ Í¼Æ¬ £¬ path ×÷Îª Í¼Æ¬µÄ key
+		// å…ˆ è¯•ç€ ä» ç¼“å­˜ å¾—åˆ° å›¾ç‰‡ ï¼Œ path ä½œä¸º å›¾ç‰‡çš„ key
 		Bitmap bmp = mLruCache.get(path);
 
 		if (bmp != null) {
 			if (callback != null) {
-				// »Øµ÷ Í¼Æ¬ ÏÔÊ¾
+				// å›è°ƒ å›¾ç‰‡ æ˜¾ç¤º
 				callback.imageLoad(imageView, bmp, sourcePath);
 			}
 			// imageView.setImageBitmap(bmp);
 			return;
 		}
-		// Èç¹û bmp == null £¬¸ø imageView ÏÔÊ¾Ä¬ÈÏÍ¼Æ¬
+		// å¦‚æœ bmp == null ï¼Œç»™ imageView æ˜¾ç¤ºé»˜è®¤å›¾ç‰‡
 		imageView.setImageResource(r_Id);
-		// Æô¶¯ Ïß³Ì³Ø
+		// å¯åŠ¨ çº¿ç¨‹æ± 
 		threadPoolUtils.getExecutorService().execute(new Runnable() {
 			Bitmap bitmap = null;
 
@@ -93,20 +77,20 @@ public class ImageLoader {
 				// TODO Auto-generated method stub
 
 				try {
-					// ¼ÓÔØ Í¼Æ¬ µØÖ· ¶ÔÓ¦ µÄ ËõÂÔÍ¼
-					bitmap = revitionImageSize(imageView, sourcePath);
+					// åŠ è½½ å›¾ç‰‡ åœ°å€ å¯¹åº” çš„ ç¼©ç•¥å›¾
+					bitmap = tailorImageSize(imageView, sourcePath);
 				} catch (Exception e) {
 
 				}
 				if (bitmap == null) {
 					try {
-						// Èç¹û ËõÂÔÍ¼ Ã»¼ÓÔØ³É¹¦ ÏÔÊ¾ Ä¬ÈÏ ÉèÖÃµÄÍ¼Æ¬
+						// å¦‚æœ ç¼©ç•¥å›¾ æ²¡åŠ è½½æˆåŠŸ æ˜¾ç¤º é»˜è®¤ è®¾ç½®çš„å›¾ç‰‡
 						bitmap = BitmapFactory.decodeResource(context.getResources(), r_Id);
 					} catch (Exception e) {
 					}
 				}
 				if (path != null && bitmap != null) {
-					// ½« ËõÂÔÍ¼ ·Å½ø »º´æ £¬ path ×÷Îª key
+					// å°† ç¼©ç•¥å›¾ æ”¾è¿› ç¼“å­˜ ï¼Œ path ä½œä¸º key
 					putBitmapToLruCache(path, bitmap);
 				}
 
@@ -114,21 +98,29 @@ public class ImageLoader {
 					handler.post(new Runnable() {
 						@Override
 						public void run() {
-							// »Øµ÷ Í¼Æ¬ ÏÔÊ¾
-							callback.imageLoad(imageView, bitmap, sourcePath);
+							// å›è°ƒ å›¾ç‰‡ æ˜¾ç¤º
+							 callback.imageLoad(imageView, bitmap, sourcePath);
 
 						}
 					});
 				}
-
 			}
 		});
 
 	}
 
-	public Bitmap revitionImageSize(ImageView imageView, String path) throws IOException {
+	/**
+	 * æ ¹æ®  imageView å¤§å° ç¼©ç•¥å›¾ç‰‡å¤§å°
+	 *
+	 *
+	 * @param imageView
+	 * @param path
+	 * @return
+	 * @throws IOException
+     */
+	private Bitmap tailorImageSize(ImageView imageView, String path) throws IOException {
 
-		// µÃµ½ ²¼¾Ö  ImageView µÄ ¿í¸ß
+		// å¾—åˆ° å¸ƒå±€  ImageView çš„ å®½é«˜
 		int img_width = imageView.getWidth();
 		int img_height = imageView.getHeight();
 
@@ -146,13 +138,13 @@ public class ImageLoader {
 
 		int inSampleSize = 1;
 
-		// ¼ÆËã³öÊµ¼Ê¿í¸ßºÍÄ¿±ê¿í¸ßµÄ±ÈÂÊ
+		// è®¡ç®—å‡ºå®é™…å®½é«˜å’Œç›®æ ‡å®½é«˜çš„æ¯”ç‡
 		final int heightRatio = Math.round((float) height / (float) img_height);
 		final int widthRatio = Math.round((float) width / (float) img_width);
-		// Ñ¡Ôñ¿íºÍ¸ßÖĞ×îĞ¡µÄ±ÈÂÊ×÷ÎªinSampleSizeµÄÖµ£¬ÕâÑù¿ÉÒÔ±£Ö¤×îÖÕÍ¼Æ¬µÄ¿íºÍ¸ß
-		// Ò»¶¨¶¼»á´óÓÚµÈÓÚÄ¿±êµÄ¿íºÍ¸ß¡£
+		// é€‰æ‹©å®½å’Œé«˜ä¸­æœ€å°çš„æ¯”ç‡ä½œä¸ºinSampleSizeçš„å€¼ï¼Œè¿™æ ·å¯ä»¥ä¿è¯æœ€ç»ˆå›¾ç‰‡çš„å®½å’Œé«˜
+		// ä¸€å®šéƒ½ä¼šå¤§äºç­‰äºç›®æ ‡çš„å®½å’Œé«˜ã€‚
 		inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-		// µ÷ÓÃÉÏÃæ¶¨ÒåµÄ·½·¨¼ÆËãinSampleSizeÖµ
+		// è°ƒç”¨ä¸Šé¢å®šä¹‰çš„æ–¹æ³•è®¡ç®—inSampleSizeå€¼
 		options.inSampleSize = inSampleSize;
 
 		options.inJustDecodeBounds = false;
@@ -163,28 +155,17 @@ public class ImageLoader {
 		return bitmap;
 	}
 
-	/**
-	 * ½«Í¼Æ¬´æ´¢µ½LruCache
-	 */
 	public void putBitmapToLruCache(String key, Bitmap bitmap) {
 		if (getBitmapFromLruCache(key) == null && mLruCache != null) {
 			mLruCache.put(key, bitmap);
 		}
 	}
 
-	/**
-	 * ´ÓLruCache»º´æ»ñÈ¡Í¼Æ¬
-	 */
 	public Bitmap getBitmapFromLruCache(String key) {
 		return mLruCache.get(key);
 	}
 
-	/**
-	 * ÏÔÊ¾Í¼Æ¬»Øµ÷
-	 *
-	 * @author Administrator
-	 *
-	 */
+
 	public interface ImageCallback {
 		public void imageLoad(ImageView imageView, Bitmap bitmap, Object... params);
 	}

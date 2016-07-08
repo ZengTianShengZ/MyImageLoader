@@ -1,6 +1,16 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+// 这个version是区分library版本的，因此当我们需要更新library时记得修改这个version, 这个version影响后面的引用
+version = "1.1.2"
+
+
+
 
 android {
+
+
     compileSdkVersion 23
     buildToolsVersion "24.0.0"
 
@@ -25,3 +35,86 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'
 }
+def siteUrl = 'https://github.com/ZengTianShengZ/MyImageLoader'      // 项目的主页
+def gitUrl = 'https://github.com/ZengTianShengZ/MyImageLoader.git'   // Git仓库的url*/
+group = "com.zts"                                        // Maven Group ID for the artifact，一般填你唯一的包名
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                // Add your description here
+                name '轻量级 imageloader' 	//项目描述
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'zts'		//填写的一些基本信息
+                        name 'zts'
+                        email '2292800085@qq.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    options.encoding = "UTF-8" //添加编码方式，才不会报编码错误
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "imageloader"	//发布到JCenter上的项目名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+/**
+
+ 没有在 local.properties 添加 bintray.user=zengtianshengz 的 报错情况
+
+ FAILURE: Build failed with an exception.
+
+ * What went wrong:
+ A problem was found with the configuration of task ':imageloader:bintrayUpload'.
+ > No value has been specified for property 'user'.
+
+ * Try:
+ Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+ BUILD FAILED
+ */

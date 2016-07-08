@@ -1,27 +1,24 @@
 package zts.com.myimageloader;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import adapter.DividerGridItemDecoration;
-import utils.ScannerImageUrl;
+import zts.com.imageloader.adapter.DividerGridItemDecoration;
+import zts.com.imageloader.utils.ScannerImageUrl;
 
 public class MainActivity extends AppCompatActivity {
 
 
     private PhotoFloderItemAdapter mPhotoFloderItemAdapter;
     private RecyclerView mRecyclerView;
-    private List<String> gridItemList = new ArrayList<String>();
+    private List<String> imgUrlList = new ArrayList<String>();
 
     private Context context;
 
@@ -33,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         context = getApplication();
 
         initData();
+
     }
 
 
@@ -45,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
         new Thread() {
             public void run() {
 
-                gridItemList = ScannerImageUrl.getImageUrl(context);
+                imgUrlList = ScannerImageUrl.getImageUrl(context);
 
                 runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
 
-                        mPhotoFloderItemAdapter = new PhotoFloderItemAdapter(context,gridItemList);
+                        mPhotoFloderItemAdapter = new PhotoFloderItemAdapter(context,imgUrlList);
                         mRecyclerView.setAdapter(mPhotoFloderItemAdapter);
 
                     }

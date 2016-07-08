@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/adapter/DividerGridItemDecoration.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/adapter/RecycleViewHolder.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/baseAdapter/BaseRecycleViewAdapter.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/baseAdapter/DividerGridItemDecoration.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/baseAdapter/RecycleViewHolder.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/utils/ImageLoader.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/utils/ImageLoader.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/imageloader/src/main/java/utils/ThreadPoolUtils.java" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

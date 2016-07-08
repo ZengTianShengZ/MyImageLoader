@@ -1,11 +1,10 @@
-package utils;
+package zts.com.imageloader.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +14,7 @@ import java.util.List;
 public class ScannerImageUrl {
 
     /**
-     * 遍历 手机 图片 所在的 文件夹
-     *
-     * @return 文件夹 list
+     * 得到 手机 下的 所有图片
      */
     public static List<String> getImageUrl(Context context){
         List<String> gridItemList = new ArrayList<String>();
@@ -41,4 +38,5 @@ public class ScannerImageUrl {
         return gridItemList;
 
     }
+
 }

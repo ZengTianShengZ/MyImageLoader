@@ -1,4 +1,4 @@
-package adapter;
+package zts.com.imageloader.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -33,12 +33,6 @@ public class RecycleViewHolder extends RecyclerView.ViewHolder{
         return holder;
     }
 
-    /**
-     * 通过viewId获取控件
-     *
-     * @param viewId
-     * @return
-     */
     public <T extends View> T getView(int viewId)
     {
         View view = mViews.get(viewId);
